@@ -6,8 +6,9 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "resumes",
-    resource_type: "auto",
-    public_id: (req, file) => Date.now() + "-" + file.originalname,
+    resource_type: "raw", // 🔥 FIX (IMPORTANT)
+    public_id: (req, file) =>
+      Date.now() + "-" + file.originalname.split(".")[0],
   },
 });
 
