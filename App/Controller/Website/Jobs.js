@@ -2,38 +2,39 @@ const {addJobModel} = require("../../Model/Admin_Model/addJobModel");
 const {submitApplication} = require("../../Model/Website_Model/submitApplication");
 
 
-let submitApp =async (req, res)=>{
-    let {id}=req.params
-   
-   let obj= {...req.body}
-    console.log(req.file)
+let submitApp = async (req, res) => {
+  try {
+    let { id } = req.params;
 
-    if(req.file){
-        if(req.file.filename){
-                obj['resume']=req.file.filename
-                obj['appliedFor']=id
-                obj['staticPath']=req.file.destination
-        }
-        
+    let obj = { ...req.body };
+
+    console.log(req.file);
+
+    if (req.file) {
+      // 🔥 Cloudinary URL
+      obj.resume = req.file.path;
+
+      obj.appliedFor = id;
+
+      // optional (not needed anymore)
+      obj.staticPath = "cloudinary";
     }
-    try{
-         let appyJob = await submitApplication.insertOne(obj); 
-            
-         obj = {
-            status: 1,
-            message: "Job applied successfully",
-            
-        }
-        res.send(obj);
-    }
-    catch(error){
-        obj = {
-            status: 0,
-            message: error.message
-        }
-        res.send(obj);
-    }
-}
+
+    await submitApplication.create(obj);
+
+    return res.send({
+      status: 1,
+      message: "Job applied successfully",
+      data: obj
+    });
+
+  } catch (error) {
+    return res.send({
+      status: 0,
+      message: error.message
+    });
+  }
+};
 
 let viewJobs = async (req, res)=>{
     try{
