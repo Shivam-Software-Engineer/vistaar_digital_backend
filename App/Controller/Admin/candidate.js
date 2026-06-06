@@ -2,27 +2,40 @@ const { submitApplication } = require("../../Model/Website_Model/submitApplicati
 
 
 
-let viewCandidate = async (req, res)=>{
-    try{
-        let viewUsers = await submitApplication.find().populate({
-            path:"appliedFor",
-            select: "_id jobTitle"
-        });
-        obj = {
-            status: 1,
-            message: "Jobs fetched successfully",   
-            data: viewUsers
+let viewCandidate = async (req, res) => {
+    try {
+        let { username } = req.query;
+
+        let query = {};
+
+        // sirf username search
+        if (username) {
+            query.username = {
+                $regex: username,
+                $options: "i"
+            };
         }
-        res.send(obj);
-    }
-    catch(error){
-        obj = {
+
+        let viewUsers = await submitApplication
+            .find(query)
+            .populate({
+                path: "appliedFor",
+                select: "_id jobTitle"
+            });
+
+        res.send({
+            status: 1,
+            message: "Candidates fetched successfully",
+            data: viewUsers
+        });
+
+    } catch (error) {
+        res.send({
             status: 0,
             message: error.message
-        }
-        res.send(obj);
+        });
     }
-}
+};
 
 
 
