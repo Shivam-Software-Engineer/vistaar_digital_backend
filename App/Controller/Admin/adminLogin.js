@@ -27,27 +27,32 @@ let adminLogin = async (req, res)=>{
 }
 }
 
-let adminCookeieCheck = async (req, res)=>{
-    let {id}=req.params
-    
-    let checkId=await adminLoginModel.findOne()
-    let obj
-    if(checkId){
-        obj={
-            status:1,
-            message:"Loginned!",
-            checkId
+let adminCookeieCheck = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const checkId = await adminLoginModel.findById(id);
+
+        if (!checkId) {
+            return res.send({
+                status: 0,
+                message: "Invalid ID"
+            });
         }
-        res.send(obj)
+
+        res.send({
+            status: 1,
+            message: "Logged in!",
+            data: checkId
+        });
+
+    } catch (error) {
+        res.send({
+            status: 0,
+            message: error.message
+        });
     }
-    else{
-        obj={
-            status:0,
-            message:"Invalid id"
-        }
-        res.send(obj)
-    }
-}
+};
 
 
 
