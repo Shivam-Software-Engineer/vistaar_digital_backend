@@ -1,5 +1,6 @@
-require("dotenv").config();
+
 const {adminRoutes} = require("./App/Routes/AdminRoutes");
+require("dotenv").config();
 let express = require("express");
 let mongoose = require("mongoose");
 let App = express();

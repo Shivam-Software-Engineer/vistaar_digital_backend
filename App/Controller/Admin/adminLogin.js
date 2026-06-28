@@ -7,6 +7,7 @@ let adminLogin = async (req, res)=>{
     // console.log(req.body)
     let checkAdmin=await adminLoginModel.findOne({uname,pass})
     let obj
+    
     if(checkAdmin){
         obj={
             status:1,
